@@ -65,27 +65,24 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ## 项目&功能介绍
 
 > app/
->   main.py - FastAPI 应用的入口文件，包含应用初始化和路由注册。
 >
->   api/
->     router.py - 定义和注册 API 路由。
->     v1/
->       groups.py - 定义获取QQ群列表和获取指定QQ群成员列表的 API 接口。
->
->   db/
->     dao/
->       groups_dao.py - 数据访问对象，包含对 QQ 群组信息的数据库操作。
->     database.py - 数据库初始化和关闭函数。
->
->   models/
->     QQgroup.py - 定义 QQ 群组的数据模型。
->
->   services/
->     api.py - 定义 API 接口路径。
->     exception.py - 定义自定义异常类。
->     groups_svc.py - 提供 QQ 群组相关的服务层逻辑。
->     schemas.py - 定义数据模型和响应模式。
->     server_api.py - 定义服务器 API 基础 URL。
+> - main.py - FastAPI 应用的入口文件，包含应用初始化和路由注册。
+> - api/
+>   - router.py - 定义和注册 API 路由。
+>   - v1/
+>     - groups.py - 定义获取QQ群列表和获取指定QQ群成员列表的 API 接口。
+> - db/
+>   - dao/
+>     - groups_dao.py - 数据访问对象，包含对 QQ 群组信息的数据库操作。
+>   - database.py - 数据库初始化和关闭函数。
+> - models/
+>   -  QQgroup.py - 定义 QQ 群组的数据模型。
+> - services/
+>   -  api.py - 定义 API 接口路径。
+>   -  exception.py - 定义自定义异常类。
+>   -  groups_svc.py - 提供 QQ 群组相关的服务层逻辑。
+>   -  schemas.py - 定义数据模型和响应模式。
+>   -  server_api.py - 定义服务器 API 基础 URL。
 
 
 
@@ -118,6 +115,37 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
   - 提供 VSCode 调试配置和 HTTP 请求测试样例，方便开发和调试。
   - 主要文件：[`tests/test.http`](tests/test.http)
 
+```mermaid
+graph TD
+    A[客户端请求 /groups/qq_group_list] --> B[FastAPI 路由处理]
+    B --> C[调用 QQGroupService.save_group_list]
+    C --> D[调用 QQGroupService.get_group_list]
+    D --> E[发送 HTTP 请求到 QQ_BOT_LOCAL_BASE_URL 获取群列表]
+    E --> F[返回群列表数据]
+    F --> G[调用 save_qq_group_list 保存群列表到数据库]
+    G --> H[返回保存结果]
+    H --> I[返回群列表数据给客户端]
+
+    A2[客户端请求 /groups/qq_group_member_list?group_id=xxx] --> B2[FastAPI 路由处理]
+    B2 --> C2[调用 QQGroupService.get_group_data]
+    C2 --> D2[调用 QQGroupService.get_group_data_from_local_db]
+    D2 --> E2[查询本地数据库]
+    E2 --> F2[返回群组数据]
+    F2 --> G2{群组数据是否存在?}
+    G2 -->|是| H2[调用 QQGroupService.fetch_group_member_list]
+    G2 -->|否| I2[调用 QQGroupService.get_group_data_from_server]
+    I2 --> J2[调用 QQGroupService.get_group_list]
+    J2 --> K2[发送 HTTP 请求到 QQ_BOT_LOCAL_BASE_URL 获取群列表]
+    K2 --> L2[返回群列表数据]
+    L2 --> M2[调用 save_qq_group_list 保存群列表到数据库]
+    M2 --> N2[调用 QQGroupService.get_group_data_from_local_db]
+    N2 --> O2[返回群组数据]
+    O2 --> P2[调用 QQGroupService.fetch_group_member_list]
+    H2 --> Q2[发送 HTTP 请求到 QQ_BOT_LOCAL_BASE_URL 获取群成员列表]
+    Q2 --> R2[返回群成员列表数据]
+    R2 --> S2[返回群成员列表数据给客户端]
+```
+
 
 
 ## 调试
@@ -130,12 +158,18 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 
 
 
-### 调用接口检查
+### 依赖服务检查
+
+**QQ**
+
+1. QQNT 安装 LLOneBot 插件 [Releases · super1207/install_llob](https://github.com/super1207/install_llob/releases)
+2. 启动QQNT，打开设置查看 `LLOneBot` 插件是否启用
+3. 浏览器检查 LLOneBot 服务
 
 ```shell
 http://127.0.0.1:3000/
 ```
-如果显示"LLOneBot server 已启动" 说明和QQ机器人正常
+如果显示"LLOneBot server 已启动" 说明和QQ机器人 依赖服务工作正常
 
 ### 本地接口调试
 
