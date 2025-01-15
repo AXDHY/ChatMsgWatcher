@@ -1,0 +1,3 @@
+GET http://127.0.0.1:8000/groups/qq_group_list
+
+GET http://127.0.0.1:8000/groups/qq_group_member_list?group_id=49xxxx949
