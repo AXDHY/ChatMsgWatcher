@@ -9,3 +9,6 @@ class QQGroup(Model):
     group_create_time = fields.DatetimeField(null=False)
     member_count = fields.IntField(null=False)
     max_member_count = fields.IntField(null=False)
+
+    class Meta:
+        table = "qq_groups"
