@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from tortoise.queryset import QuerySet
 from app.models.QQgroup import QQGroup
-from app.services.schemas import QQGroupInfo
+from app.services.types.schemas import QQGroupInfo
 from app.config import beijing_tz
 
 

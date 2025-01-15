@@ -1,6 +1,6 @@
 import httpx
 
-from app.services.schemas import QQMessageResponse
+from app.services.types.schemas import QQMessageResponse
 from app.services.server_api import QQ_BOT_LOCAL_BASE_URL
 from app.services.api import API_POST_GROUP_MSG_HISTORY
 from app.services.exception import CustomServiceError

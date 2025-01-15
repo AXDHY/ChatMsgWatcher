@@ -1,7 +1,7 @@
 import httpx
 
 from app.db.dao.groups_dao import query_qq_group_list, save_qq_group_list
-from app.services.schemas import QQGroupResponse
+from app.services.types.schemas import QQGroupResponse
 from app.services.server_api import QQ_BOT_LOCAL_BASE_URL
 from app.services.api import API_GET_GROUP_LIST, API_POST_GROUP_MEMBER_LIST
 from app.services.exception import CustomServiceError
