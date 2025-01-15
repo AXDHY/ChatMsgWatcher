@@ -1,5 +1,7 @@
 from tortoise import Tortoise
 
+from app.config import STR_TZ_NAME
+
 
 async def db_init():
     await Tortoise.init(
@@ -11,6 +13,8 @@ async def db_init():
                 "app.models.QQSender",
             ]
         },
+        use_tz=True,
+        timezone=STR_TZ_NAME,
     )
     await Tortoise.generate_schemas()
 

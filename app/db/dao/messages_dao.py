@@ -1,11 +1,9 @@
 from datetime import datetime
-import pytz
 
 from typing import List
 from app.models.QQMessage import QQMessage
 from app.models.QQSender import QQSender
-
-beijing_tz = pytz.timezone("Asia/Shanghai")
+from app.config import beijing_tz
 
 
 async def get_earliest_msg_seq(group_id: int) -> int | None:
@@ -159,7 +157,9 @@ async def check_message_data_exist(message: QQMessage) -> bool:
                 discrepancies.append(
                     f"user_id: {existing_message.user_id} -> {message.user_id}"
                 )
-            if existing_message.time != datetime.fromtimestamp(message.time, tz=beijing_tz):
+            if existing_message.time != datetime.fromtimestamp(
+                message.time, tz=beijing_tz
+            ):
                 discrepancies.append(
                     f"time: {existing_message.time} -> {datetime.fromtimestamp(message.time, tz=beijing_tz)}"
                 )
@@ -176,9 +176,7 @@ async def check_message_data_exist(message: QQMessage) -> bool:
                     f"raw_message: {existing_message.raw_message} -> {message.raw_message}"
                 )
             if existing_message.font != message.font:
-                discrepancies.append(
-                    f"font: {existing_message.font} -> {message.font}"
-                )
+                discrepancies.append(f"font: {existing_message.font} -> {message.font}")
             if existing_message.sub_type != message.sub_type:
                 discrepancies.append(
                     f"sub_type: {existing_message.sub_type} -> {message.sub_type}"

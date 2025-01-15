@@ -1,12 +1,10 @@
 from datetime import datetime
 from typing import List, Optional
-import pytz
 
 from tortoise.queryset import QuerySet
 from app.models.QQgroup import QQGroup
 from app.services.schemas import QQGroupInfo
-
-beijing_tz = pytz.timezone("Asia/Shanghai")
+from app.config import beijing_tz
 
 
 async def save_qq_group_list(group_list: List[QQGroupInfo]):
